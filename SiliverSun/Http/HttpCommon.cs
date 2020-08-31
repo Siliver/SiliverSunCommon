@@ -10,6 +10,10 @@ using System.Threading.Tasks;
 
 namespace SiliverSun.Http
 {
+    /// <summary>
+    /// HttpClient类派生用途HttpMessageInvoker。HttpClient的Dispose方法不会立即释放相关的套接字，而是在超时后释放。这个超时可能需要20秒，有了这个超时，使用许多HttpClient对象实例可能导致程序耗尽套接字。解决方案，单例或工厂类。
+    /// 每个HttpClient的实例都维护它自己的线程池，所以HttpClient实例之间的请求会被隔离
+    /// </summary>
     public class HttpCommon
     {
         #region 静态的请求客户端工厂
@@ -21,30 +25,39 @@ namespace SiliverSun.Http
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public static async Task<string> HttpGet(string url)
+        public static async Task<string> HttpGetJson(string url)
         {
-            using var httpclient = _httpClientFactory.GetHttpClient();
-
-            var response = httpclient.GetAsync(url);
-
-            //进行返回结果的等待获取
-            var responseresult = response.Result;
-
-            //创建返回结果
-            string result = string.Empty;
-
-            #region 添加返回的判断
-            if (responseresult.StatusCode == HttpStatusCode.OK)
+            try
             {
+                
+
+                using var httpclient = _httpClientFactory.GetHttpClient();
+
+                //设置JSON格式的获取
+                httpclient.DefaultRequestHeaders.Add("Accept", "application/json;");
+
+                //创建HttpRequestMessage,分离请求，和HEAD,OPTIONS,TRACE等控制
+                using var request = new HttpRequestMessage(HttpMethod.Get, url);
+
+                var response = await httpclient.SendAsync(request);
+
+                response.EnsureSuccessStatusCode();
+
+                //进行返回结果的等待获取
+                var responseresult = response;
+
+                //创建返回结果
+                string result = string.Empty;
+
+                #region 添加返回的判断
                 result = await responseresult.Content.ReadAsStringAsync();
-            }
-            else
-            {
+                #endregion
 
+                return result;
             }
-            #endregion
-
-            return result;
+            catch (Exception ex) {
+                throw ex;
+            }
         }
 
         /// <summary>
