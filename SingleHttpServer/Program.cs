@@ -1,5 +1,4 @@
-﻿using Microsoft.Net.Http.Server;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace SingleHttpServer
