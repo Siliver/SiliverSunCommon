@@ -123,7 +123,7 @@ namespace SiliverSun.UDPTool
                 //进行地址组的判断
                 if (groupAddress != null)
                 {
-                    //创建多播
+                    //加入多播组
                     client.JoinMulticastGroup(IPAddress.Parse(groupAddress));
                 }
                 //进行字符数组的获取
@@ -134,6 +134,7 @@ namespace SiliverSun.UDPTool
                 //进行地址组的获取
                 if (groupAddress != null)
                 {
+                    //推出多播组
                     client.DropMulticastGroup(IPAddress.Parse(groupAddress));
                 }
             }
