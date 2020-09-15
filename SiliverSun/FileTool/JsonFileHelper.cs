@@ -50,6 +50,7 @@ namespace SiliverSun.FileTool
             #region 进行JSON文件的获取
             using StreamReader textReader = File.OpenText(truepath);
             using JsonTextReader jsonReader = new JsonTextReader(textReader) { CloseInput = true };
+            //为确保获取到的文件是线程安全的 使用ConcurrentDictionary 类进行获取
             ConcurrentDictionary<string, object> resultdictionary = JsonConvert.DeserializeObject<ConcurrentDictionary<string, object>>(jsonReader.ReadAsString());
             return resultdictionary;
             #endregion
