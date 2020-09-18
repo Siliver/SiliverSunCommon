@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SiliverSun", "SiliverSun\Si
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SingleHttpServer", "SingleHttpServer\SingleHttpServer.csproj", "{7D5B048F-CAEB-44CA-AA0F-13AF47475950}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SiliverService", "SiliverService\SiliverService.csproj", "{748D10CD-4689-48AA-87ED-A9EC35F40872}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SiliverService", "SiliverService\SiliverService.csproj", "{748D10CD-4689-48AA-87ED-A9EC35F40872}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
