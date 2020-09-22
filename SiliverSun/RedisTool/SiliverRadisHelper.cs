@@ -64,7 +64,7 @@ namespace SiliverSun.RedisTool
         /// <param name="keystring">HASH结构键</param>
         /// <param name="valuestring">HASH结构键对应的值</param>
         /// <returns></returns>
-        public bool SetHashData(string objectname, string keystring, string valuestring, int dbindex=0, DateTime? expiry = null)
+        public bool SetHashData(string objectname, string keystring, string valuestring, DateTime? expiry = null, int dbindex=0)
         {
 
             if (_redis == null) {
@@ -191,7 +191,7 @@ namespace SiliverSun.RedisTool
         /// <param name="dbindex">数据库索引</param>
         /// <param name="expiry">过期日期</param>
         /// <returns></returns>
-        public bool SetStringData(string keystring, string valuestring, int dbindex = 0, DateTime? expiry = null) {
+        public bool SetStringData(string keystring, string valuestring, DateTime? expiry = null, int dbindex = 0) {
 
             if (_redis == null)
             {

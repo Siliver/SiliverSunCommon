@@ -27,7 +27,7 @@ namespace SingleHttpServer
             Console.WriteLine(readresult);
 
 
-            var deleteresult = srh.DeleteHash("BX25200918000076", 8);
+            var deleteresult = srh.DeleteData("BX25200918000076", 8);
 
             Console.WriteLine(deleteresult);
 
