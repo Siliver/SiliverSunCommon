@@ -1,5 +1,8 @@
-﻿using StackExchange.Redis;
+﻿using Newtonsoft.Json;
+using StackExchange.Redis;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SiliverSun.RedisTool
 {
@@ -52,14 +55,16 @@ namespace SiliverSun.RedisTool
             }
         }
 
+        #region HASH表的帮助类
+
         /// <summary>
         /// 进行Hash置的添加
         /// </summary>
-        /// <param name="objectname"></param>
-        /// <param name="keystring"></param>
-        /// <param name="valuestring"></param>
+        /// <param name="objectname">Redis键名</param>
+        /// <param name="keystring">HASH结构键</param>
+        /// <param name="valuestring">HASH结构键对应的值</param>
         /// <returns></returns>
-        public bool SetHashData(string objectname, string keystring, string valuestring, int dbindex=0)
+        public bool SetHashData(string objectname, string keystring, string valuestring, int dbindex=0, DateTime? expiry = null)
         {
 
             if (_redis == null) {
@@ -74,6 +79,13 @@ namespace SiliverSun.RedisTool
             //进行Hash数据的添加
             var flag = database.HashSetAsync(objectname, keystring, valuestring, When.NotExists).Result;
 
+            //添加过期时间
+            if (expiry != null)
+            {
+                database.KeyExpireAsync(objectname, expiry);
+            }
+
+
             return flag;
 
         }
@@ -81,12 +93,11 @@ namespace SiliverSun.RedisTool
         /// <summary>
         /// 根据表名和主键进行字段值的获取
         /// </summary>
-        /// <param name="objectname">表名</param>
-        /// <param name="keystring">主键名称</param>
-        /// <param name="dbindex">要查询的缓存索引</param>
-        /// <param name="expiry">缓存的过期时间</param>
+        /// <param name="objectname">Redis键名</param>
+        /// <param name="keystring">HASH结构键</param>
+        /// <param name="dbindex">切换库索引使用</param>
         /// <returns></returns>
-        public string GetHashData(string objectname, string keystring, int dbindex = 0, DateTime? expiry = null)
+        public string GetHashData(string objectname, string keystring, int dbindex = 0)
         {
             if (_redis == null)
             {
@@ -106,12 +117,37 @@ namespace SiliverSun.RedisTool
             //进行Hash数据的获取
             var hashdata = database.HashGet(objectname, keystring);
 
-            if(expiry!=null)
+            return hashdata;
+        }
+
+        /// <summary>
+        /// 通过Redis键名查询内容
+        /// </summary>
+        /// <param name="objectname">Redis键</param>
+        /// <param name="dbindex">数据库索引</param>
+        /// <returns></returns>
+        public string GetHashData(string objectname, int dbindex = 0) {
+            if (_redis == null)
             {
-                database.KeyExpireAsync(objectname, expiry);
+                return string.Empty;
             }
 
-            return hashdata;
+            if (string.IsNullOrWhiteSpace(objectname))
+            {
+                return string.Empty;
+            }
+
+            var database = _redis.GetDatabase(dbindex);
+            if (database == null)
+            {
+                return string.Empty;
+            }
+
+            //进行Hash数据的获取
+            var hashdata = database.HashGetAll(objectname);
+
+            return JsonConvert.SerializeObject(hashdata);
+
         }
 
         /// <summary>
@@ -143,14 +179,70 @@ namespace SiliverSun.RedisTool
             return hashdata;
         }
 
+        #endregion
+
+        #region STRING 帮助类
+
         /// <summary>
-        /// 根据表名和主键删除对应的键
+        /// STRING类型值得插入
         /// </summary>
-        /// <param name="objectname">表明</param>
-        /// <param name="keystring">键名</param>
-        /// <param name="dbindex">索引库</param>
+        /// <param name="keystring">Redis键值</param>
+        /// <param name="valuestring">键对应VALUE值</param>
+        /// <param name="dbindex">数据库索引</param>
+        /// <param name="expiry">过期日期</param>
         /// <returns></returns>
-        public bool DeleteHash(string objectname, int dbindex = 0)
+        public bool SetStringData(string keystring, string valuestring, int dbindex = 0, DateTime? expiry = null) {
+
+            if (_redis == null)
+            {
+                return false;
+            }
+            var database = _redis.GetDatabase(dbindex);
+            if (database == null)
+            {
+                return false;
+            }
+
+            //进行STRING类型数据的添加
+            var flag = database.StringSetAsync(keystring, valuestring, (expiry!=null?expiry-DateTime.Now:null), When.NotExists).Result;
+
+            return flag;
+
+        }
+
+        /// <summary>
+        /// STRING类型取值方法
+        /// </summary>
+        /// <param name="keystring">键值</param>
+        /// <param name="dbindex">数据库索引值</param>
+        /// <returns></returns>
+        public string GetStringData(string keystring, int dbindex = 0) {
+            if (_redis == null)
+            {
+                return string.Empty;
+            }
+            var database = _redis.GetDatabase(dbindex);
+            if (database == null)
+            {
+                return string.Empty;
+            }
+
+            //进行STRING类型数据的获取
+            var redisresult = database.StringGetAsync(keystring).Result;
+
+            return redisresult;
+        }
+
+        #endregion
+
+        #region 通用方法
+        /// <summary>
+        /// 根据REDIS键名删除
+        /// </summary>
+        /// <param name="keystring">REDIS键值</param>
+        /// <param name="dbindex">缓存库索引</param>
+        /// <returns></returns>
+        public bool DeleteData(string rediskey, int dbindex = 0)
         {
             if (_redis == null)
             {
@@ -162,15 +254,12 @@ namespace SiliverSun.RedisTool
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(objectname))
-            {
-                return false;
-            }
+            //进行STRING类型数据的获取
+            var redisresult = database.KeyDeleteAsync(rediskey).Result;
 
-            //进行Hash数据的获取
-            var hashdata = database.KeyDeleteAsync(objectname).Result;
-
-            return hashdata;
+            return redisresult;
         }
+
+        #endregion
     }
 }
