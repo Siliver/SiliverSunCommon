@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
 using StackExchange.Redis;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SiliverSun.RedisTool
 {
@@ -38,7 +36,7 @@ namespace SiliverSun.RedisTool
             {
                 if (_redis == null)
                 {
-                    _redis = ConnectionMultiplexer.Connect($"{_redisurl}:{_redisport},password={_redispassword},DefaultDatabase={_redisname}");
+                    _redis = ConnectionMultiplexer.Connect($"{_redisurl}:{_redisport},defaultDatabase={_redisname},password={_redispassword}");
                 }
             }
             else {
@@ -51,7 +49,7 @@ namespace SiliverSun.RedisTool
                 {
                     _redis.Dispose();
                 }
-                _redis = ConnectionMultiplexer.Connect($"{_redisurl}:{_redisport},password={_redispassword},DefaultDatabase={_redisname}");
+                _redis = ConnectionMultiplexer.Connect($"{_redisurl}:{_redisport},defaultDatabase={_redisname},password={_redispassword}");
             }
         }
 
