@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml;
-
-namespace SiliverSun.encryptionTool
+﻿namespace SiliverSun.encryptionTool
 {
     /// <summary>
     /// 取自https://www.cnblogs.com/weiweixiang/p/10102950.html
@@ -49,9 +44,5 @@ namespace SiliverSun.encryptionTool
         //public static string Encrypt(string plaintext, OutputMethod method) {
         //    return Encrypt(plaintext, _key, _Vector, method);
         //}
-
-    //    public static string Encrypt(string plaintext, string key) {
-    //        return null;
-    //    }
-    //}
+    }
 }

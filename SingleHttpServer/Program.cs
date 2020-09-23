@@ -20,7 +20,7 @@ namespace SingleHttpServer
                 }
             };
 
-            var setresult = srh.SetHashData("BX25200918000076", i.ToString(), JsonConvert.SerializeObject(data), 8);
+            var setresult = srh.SetHashData("BX25200918000076", i.ToString(), JsonConvert.SerializeObject(data), null, 8);
 
             var readresult = srh.GetHashData("BX25200918000076", i.ToString(), 8);
 
