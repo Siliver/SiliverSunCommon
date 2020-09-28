@@ -47,7 +47,7 @@ namespace SiliverSun.ElasticTool
 
             //通过工厂类创建管道
             var requestPipelineFactory = new RequestPipelineFactory();
-            var requestPipeline = requestPipelineFactory.Create(new IConnectionConfigurationValues(),DateTimeProvider.Default, new RecyclableMemoryStreamFactory(), new SearchRequestParameters());
+            var requestPipeline = requestPipelineFactory.Create(null, DateTimeProvider.Default, new RecyclableMemoryStreamFactory(), new SearchRequestParameters());
         }
     }
 }

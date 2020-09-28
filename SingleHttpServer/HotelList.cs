@@ -1,7 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System.Collections.Generic;
 
 namespace SingleHttpServer
 {
+    /// <summary>
+    /// 酒店列表实体
+    /// </summary>
+    [BsonIgnoreExtraElements]
     public class HotelList
     {
         public long Hoteltgid { get; set; }

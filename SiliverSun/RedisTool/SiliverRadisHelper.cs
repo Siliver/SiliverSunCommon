@@ -261,7 +261,29 @@ namespace SiliverSun.RedisTool
         #endregion
 
         #region 发布订阅模式
+        /// <summary>
+        /// 发布订阅方法 用于消息推送
+        /// </summary>
+        public void GetSubscriber() {
+            ISubscriber sub = _redis.GetSubscriber();
 
+            //订阅 超时事件
+            sub.SubscribeAsync("__key*@0__:expired", new Action<RedisChannel, RedisValue>((channel, message) =>
+            {
+                Console.WriteLine($"{channel} 订阅收到消息：{message}");
+            }));
+
+            //发送消息 消息发布
+            //for (int i = 0; i < 10; i++) {
+            //    //向评到Channl1发送消息
+            //    sub.PublishAsync("Channel1", $"msg {i}");
+            //    if (i == 2)
+            //    {
+            //        //取消订阅
+            //        sub.UnsubscribeAsync("Channel1");
+            //    }
+            //}
+        }
 
         #endregion
     }

@@ -54,7 +54,7 @@ namespace SiliverSun.ElasticTool
 
         public Action<IApiCallDetails> OnRequestCompleted => (callback => {  });
 
-        public Action<RequestData> OnRequestDataCreated => new RequestData(HttpMethod.POST, "", new CustomPostData(), this, new RequestParameters(), this.MemoryStreamFactory);
+        public Action<RequestData> OnRequestDataCreated => (callback => { });
 
         public TimeSpan? PingTimeout => throw new NotImplementedException();
 
